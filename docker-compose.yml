@@ -1,0 +1,30 @@
+version: '2'
+services:
+  dev:
+    build: .
+    container_name: reuters_dev
+    tty: true
+    stdin_open: true
+    environment:
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - 5432:5432
+    networks:
+      - reut
+  adminer:
+    links:
+      - dev:dev
+    image: dpage/pgadmin4
+    container_name: reuters_web
+    environment:
+      PGADMIN_DEFAULT_EMAIL: example@example.com
+      PGADMIN_DEFAULT_PASSWORD: example
+    ports:
+      - 80:80
+    networks:
+      - reut
+    restart: unless-stopped
+
+networks:
+  reut:
+    driver: bridge
